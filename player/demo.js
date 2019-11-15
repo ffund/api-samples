@@ -81,7 +81,7 @@ function onPlayerStateChange(event){
 // with most recent values from
 // the YouTube iFrame API
 function update(node){
-  msgPrefix = (Date.now() / 1000.0) + "," + clientID + ",";
+  msgPrefix = (Date.now() / 1000.0) + "," + clientID;
   switch (node){
     // Update player reported changes
     case "duration":
