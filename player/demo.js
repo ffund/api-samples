@@ -3,10 +3,10 @@ var player;
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('player', {
     // Set Player height and width
-    height: '390',
-    width: '640',
+    height: '2160',
+    width: '4096',
     // Set the id of the video to be played
-    videoId: 'M7lc1UVf-VE',
+    videoId: 'aQd41nbQM-U',
     // Setup event handelers
     events: {
       'onReady': onPlayerReady,
@@ -17,6 +17,8 @@ function onYouTubeIframeAPIReady() {
       'onApiChange': onApiChange,
     }
   });
+  ws = new WebSocket("ws://localhost:9080");
+  clientID = Math.floor(Math.random()*16777215).toString(16);
 };
 
 // Event Handlers 
@@ -49,6 +51,7 @@ function onPlayerStateChange(event){
     case YT.PlayerState.ENDED:
       updateAll() // set status for state, ...
       clearIntervals() // clear all intervals
+      ws.close();
       break;
     case YT.PlayerState.PLAYING:
       updateAll() // set status for state, ...
@@ -78,10 +81,12 @@ function onPlayerStateChange(event){
 // with most recent values from
 // the YouTube iFrame API
 function update(node){
+  msgPrefix = (Date.now() / 1000.0) + "," + clientID + ",";
   switch (node){
     // Update player reported changes
     case "duration":
       document.getElementById("duration").innerHTML = player.getDuration()+"s";
+      ws.send(msgPrefix + ",duration," + player.getDuration() );
       break;
     case "url":
       var url = player.getVideoUrl();
@@ -95,6 +100,7 @@ function update(node){
       break;
     case "percentLoaded":
       document.getElementById("percentLoaded").innerHTML = player.getVideoLoadedFraction()*100+"%"
+      // ws.send(msgPrefix + ",percentLoaded," + player.getVideoLoadedFraction()*100 );
       break;
     case "status":
       var state = player.getPlayerState()
@@ -119,9 +125,11 @@ function update(node){
           break;
       }
       document.getElementById("status").innerHTML = status+" ("+state+")";
+      ws.send(msgPrefix + ",status," + status);
       break;
     case "currentTime":
       document.getElementById("currentTime").innerHTML = player.getCurrentTime()+"s"
+      // ws.send(msgPrefix + ",currentTime," + player.getCurrentTime() );
       break;
     case "volume":
       document.getElementById("volume").innerHTML = player.getVolume()
@@ -145,6 +153,7 @@ function update(node){
         selectbox.options.add(opt);
       }
       document.getElementById("quality").innerHTML = player.getPlaybackQuality()
+      ws.send(msgPrefix + ",quality,"+player.getPlaybackQuality());
       break;
     case "rate":
       var availableRates = player.getAvailablePlaybackRates()
