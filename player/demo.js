@@ -100,7 +100,7 @@ function update(node){
       break;
     case "percentLoaded":
       document.getElementById("percentLoaded").innerHTML = player.getVideoLoadedFraction()*100+"%"
-      // ws.send(msgPrefix + ",percentLoaded," + player.getVideoLoadedFraction()*100 );
+      ws.send(msgPrefix + ",percentLoaded," + player.getVideoLoadedFraction()*player.getDuration() );
       break;
     case "status":
       var state = player.getPlayerState()
@@ -129,7 +129,7 @@ function update(node){
       break;
     case "currentTime":
       document.getElementById("currentTime").innerHTML = player.getCurrentTime()+"s"
-      // ws.send(msgPrefix + ",currentTime," + player.getCurrentTime() );
+      ws.send(msgPrefix + ",currentTime," + player.getCurrentTime() );
       break;
     case "volume":
       document.getElementById("volume").innerHTML = player.getVolume()
