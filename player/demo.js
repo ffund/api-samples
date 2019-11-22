@@ -101,7 +101,7 @@ function update(node){
     case "percentLoaded":
       document.getElementById("percentLoaded").innerHTML = player.getVideoLoadedFraction()*100+"%"
       ws.send(msgPrefix + ",percentLoaded," + player.getVideoLoadedFraction()*player.getDuration() );
-      ws.send(msgPrefix + ",percentLoaded," + player.getVideoLoadedFraction()*player.getDuration() - player.getCurrentTime() );
+      ws.send(msgPrefix + ",bufferAhead," + player.getVideoLoadedFraction()*player.getDuration() - player.getCurrentTime() );
       break;
     case "status":
       var state = player.getPlayerState()
